@@ -1,6 +1,9 @@
 class NumberConversion
   attr_accessor :phone_number
 
+  MAX=10
+  MIN=3
+
   def initialize(number)
     @phone_number = number
   end
@@ -11,7 +14,7 @@ class NumberConversion
 
     # Validations
     # 1. Length Check
-    return "Length should be equal to 10" if ph_no_array.length != 10
+    return "Length should be equal to 10" if ph_no_array.length != MAX
     # 2. 0 or 1 Presence check
     return "Should not contain 1 or 0" if ph_no_array.select { |a| a == '1' or a == '0' }.length > 0
     
@@ -39,7 +42,33 @@ class NumberConversion
     # Reading dictionary file and setting dictionary words and arranging words based on length
     File.readlines('dictionary.txt').each do |word|
       word = word.strip()
-      dictionary_words[word.length].push(word.downcase) if word.length > 2 && word.length <= 10
+      dictionary_words[word.length].push(word.downcase) if word.length >= MIN && word.length <= MAX
     end
+
+    # Getting Combinations
+    combinations = get_combinations(ph_no_char_array)
+  end
+
+  private 
+
+  # Return all possible combinations of min 3 length and returning all possibilites
+  def get_combinations(ph_no_char_array)
+    start = (MIN - 1)
+    combinations = []
+    (start..(ph_no_char_array.length - 1)).each do |i|
+      first_word = ph_no_char_array[0..i]
+      second_word = ph_no_char_array[(i + 1)..(ph_no_char_array.length - 1)]
+      combinations << [first_word] if first_word.length == MAX
+      combinations << [first_word, second_word] if first_word.length >= MIN  && second_word.length >= MIN
+      # Checking if second part's length is more then 6
+      if second_word.length >= (MIN * 2)
+        ((i + MIN)..(ph_no_char_array.length - 1)).each do |j|
+          second_word = ph_no_char_array[(i+1)..j]
+          third_word = ph_no_char_array[(j+1)..(ph_no_char_array.length - 1)]
+          combinations << [first_word, second_word, third_word] if first_word.length >= MIN && second_word.length >= MIN && third_word.length >= MIN
+        end
+      end
+    end
+    combinations
   end
 end
