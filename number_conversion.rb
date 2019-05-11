@@ -9,6 +9,7 @@ class NumberConversion
   end
 
   def call
+    start_time = Time.now
     # Converting no to array
     ph_no_array = phone_number.to_s.split('')
 
@@ -47,6 +48,10 @@ class NumberConversion
 
     # Getting Combinations
     combinations = get_combinations(ph_no_char_array)
+
+    print "\n"
+    finish_time = Time.now
+    print (finish_time - start_time)*1000.00
   end
 
   private 
