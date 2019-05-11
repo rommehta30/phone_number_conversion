@@ -49,9 +49,14 @@ class NumberConversion
     # Getting Combinations
     combinations = get_combinations(ph_no_char_array)
 
+    # Getting words
+    final_words = get_combination_words(combinations, dictionary_words)
+    final_words = final_words.compact.flatten
+    final_words.map { |word| print "#{word}\n"}
     print "\n"
     finish_time = Time.now
     print (finish_time - start_time)*1000.00
+    return final_words
   end
 
   private 
@@ -75,5 +80,24 @@ class NumberConversion
       end
     end
     combinations
+  end
+
+  # Return all possible words by checking into dictionary
+  def get_combination_words(combinations, dictionary_words)
+    final_words = []
+    combinations.each_with_index do |combination, index|
+      results = []
+      combination.each_with_index do |c, index_1|
+        char_array = c.dup
+        results[index_1] = char_array.shift.product(*char_array).uniq.map(&:join)
+      end
+      f_results = []
+      results.each_with_index do |result, index_1|
+        f_results[index_1] = (result & dictionary_words[result[0].length])
+      end
+      product = f_results.shift.product(*f_results).map { |r| r.join(', ')}
+      final_words[index] = product if product.length > 0
+    end
+    final_words
   end
 end
