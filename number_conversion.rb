@@ -6,6 +6,13 @@ class NumberConversion
   end
 
   def call
-    print phone_number
+    # Converting no to array
+    ph_no_array = phone_number.to_s.split('')
+
+    # Validations
+    # 1. Length Check
+    return "Length should be equal to 10" if ph_no_array.length != 10
+    # 2. 0 or 1 Presence check
+    return "Should not contain 1 or 0" if ph_no_array.select { |a| a == '1' or a == '0' }.length > 0
   end
 end
